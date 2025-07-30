@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Artificial -and- Talentless - Onboarding</title>
+    <!-- Tailwind CSS CDN for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Special Elite for that vintage typewriter feel -->
+    <link href="https://fonts.googleapis.com/css2?family=Special+Elite&display=swap" rel="stylesheet">
+    <style>
+        /* Custom body styles using your specified background and font */
+        body {
+            font-family: 'Special Elite', monospace;
+            background-color: #FFFFE3; /* Light cream background */
+            color: #1A1A1A; /* Default text color */
+            min-height: 100vh; /* Ensure body takes full viewport height */
+            margin: 0;
+            /* Adjust padding-top and padding-bottom to create space for fixed logo and button */
+            padding-top: 120px; /* Space for fixed logo + buffer */
+            padding-bottom: 100px; /* Space for fixed button + buffer */
+            padding-left: 20px;
+            padding-right: 20px;
+            box-sizing: border-box;
+            display: flex; /* Enable flexbox for vertical layout */
+            flex-direction: column; /* Stack children vertically */
+            align-items: center; /* Center horizontally */
+            overflow-x: hidden; /* Prevent horizontal scrolling */
+            position: relative; /* Context for any potential absolute positioning, though not strictly needed for fixed */
+        }
+        /* Dark mode styles, adopting your specified colors */
+        body.dark-mode {
+            background-color: #000000;
+            color: #FFFFE3;
+        }
+
+        /* Container for the logo, fixed at the top of the viewport */
+        #logo-container {
+            position: fixed; /* Fixes the logo relative to the viewport */
+            top: 20px; /* Distance from the top of the viewport */
+            left: 50%; /* Start from the middle */
+            transform: translateX(-50%); /* Pull back by half its width to truly center */
+            z-index: 10; /* Ensure it stays above other content */
+            width: 100%; /* Allows max-width on the logo itself to work properly */
+            text-align: center; /* Center the image within its fixed container */
+        }
+
+        /* Styling for the main logo image within its fixed container */
+        #logo {
+            max-width: 350px; /* Your specified max-width */
+            height: auto; /* Maintain aspect ratio */
+            display: block; /* Remove extra space below image */
+            margin: 0 auto; /* Center the image within its container */
+        }
+
+        /* Adjust logo size and body padding for larger screens */
+        @media (min-width: 600px) {
+            #logo {
+                max-width: 200px; /* Your specified smaller size for larger screens */
+            }
+            body {
+                padding-top: 100px; /* Adjusted padding-top for smaller logo */
+            }
+        }
+
+        /* Main content area, centered vertically */
+        #main-content-area {
+            flex-grow: 1; /* Allows this container to take up all available vertical space */
+            display: flex; /* Enable flexbox for its children */
+            flex-direction: column; /* Stack children vertically */
+            justify-content: center; /* CENTERS THE CONTENT VERTICALLY */
+            align-items: center; /* Center children horizontally */
+            text-align: center;
+            max-width: 90%; /* Your specified max-width for content */
+            width: 100%; /* Ensure it takes full width within its max-width */
+            padding-left: 1rem; /* Small padding for inner content on very small screens */
+            padding-right: 1rem;
+        }
+
+        /* Styling for the main introduction text */
+        .intro-text {
+            color: #000000; /* Dark text color */
+            font-size: 1.5rem; /* Base font size */
+            margin-bottom: 20px; /* Space below text */
+            line-height: 1.5; /* Good readability */
+        }
+        /* Responsive font size for larger screens */
+        @media (min-width: 600px) {
+            .intro-text {
+                font-size: 2.0rem; /* Larger on desktop */
+            }
+        }
+        /* Dark mode for intro text */
+        body.dark-mode .intro-text {
+            color: #FFFFE3;
+        }
+
+        /* Footer for the button, fixed at the bottom */
+        #button-footer {
+            position: fixed; /* Fixes the footer relative to the viewport */
+            bottom: 50px; /* Distance from the bottom of the viewport */
+            left: 50%; /* Start from the middle */
+            transform: translateX(-50%); /* Pull back by half its width to truly center */
+            z-index: 10; /* Ensure it stays above other content */
+            width: calc(100% - 40px); /* Full width minus body padding */
+            max-width: 300px; /* Matches button's max-width for centering */
+            text-align: center; /* Center the button within the footer */
+        }
+
+        /* Consistent button styling */
+        button {
+            background-color: #6c5ce7;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1em;
+            font-family: 'Special Elite', monospace;
+            cursor: pointer;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 300px;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        button:disabled {
+            background-color: #cccccc;
+            color: #666666;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        /* Dark mode styles */
+        body.dark-mode button {
+            background-color: #bb86fc;
+            color: #121212;
+        }
+
+        body.dark-mode button:disabled {
+            background-color: #444444;
+            color: #888888;
+        }
+    </style>
+</head>
+<body>
+    <!-- Container for the logo, fixed at the top of the viewport -->
+    <div id="logo-container">
+        <!-- Using logo.png as per previous file uploads, added onerror for robustness -->
+        <img id="logo" src="assets/logo.png" alt="Artificial -and- Talentless Logo" onerror="this.onerror=null; this.src='https://placehold.co/350x80/1A1A1A/FFFFE3?text=Logo'" data-dark-src="assets/logo-dark.png" data-dark-src="assets/logo-dark.png">
+    </div>
+
+    <!-- Main content area that will center the introduction text vertically -->
+    <div id="main-content-area">
+        <p class="intro-text" id="intro-text">
+    </div>
+
+    <!-- Footer for the button, fixed at the bottom -->
+    <div id="button-footer">
+        <button id="continue-button">Continue</button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+        // 🔁 data-dark-src swap logic
+        document.querySelectorAll("img[data-dark-src]").forEach(img => {
+          if (document.body.classList.contains("dark-mode")) {
+            img.src = img.dataset.darkSrc;
+          }
+        });
+            // Apply theme based on localStorage
+            const theme = localStorage.getItem('theme');
+            if (theme === 'dark') {
+                document.body.classList.add('dark-mode');
+            }
+
+            const userNameSpan = document.getElementById('user-name');
+            const storedUserName = localStorage.getItem('userName');
+
+            // Display the stored user name
+            if (userNameSpan && storedUserName) {
+                userNameSpan.textContent = storedUserName;
+            } else if (userNameSpan) {
+                // Fallback if no name is found (shouldn't happen if previous page works)
+                userNameSpan.textContent = 'Valued User';
+            }
+
+            const continueButton = document.getElementById('continue-button');
+            const introTextElement = document.getElementById('intro-text'); // Correctly get element by ID
+
+            const introLines = [
+                "Let's get to know each other, so a therapist can get to know your money a lot better.",
+                "Let's get to know each other so I can start the process of destroying you from the inside out.",
+                "Time for a quick personality check—don't worry, no one gets out of here without a little roast.",
+                "Let me gather some info so I can better insult your life choices in the most personalized way possible.",
+                "Let's figure out what makes you tick, so I can break it down and put it back together wrong.",
+                "I need to know everything about you... for completely healthy and non-suspicious reasons.",
+                "Don't worry, this will only take a minute, and I promise not to make any life-altering judgments... yet.",
+                "Here's a quick survey to help me turn all your quirks into finely crafted insults. You're welcome.",
+                "I'm about to know you better than your best friend does. Brace yourself.",
+                "Before we begin, I need to peer into the soft, writhing core of your personality. Don’t flinch.",
+                "Answer honestly. I already know when you’re lying—I just want to see if you do.",
+                "Let’s unlock your inner self. Then maybe lock it back up, depending on what we find.",
+                "Time to spill your guts—figuratively, unless this app updates poorly.",
+                "Let me map your flaws like constellations. Beautiful, tragic, avoidable.",
+                "I just need some basic info before I decide whether you’re a misunderstood genius or just very online.",
+                "Take a deep breath. This is the part where I psychoanalyze you with all the grace of a chainsaw.",
+                "This short quiz will determine your love language, your deepest fear, and how close you are to a villain arc.",
+                "Let’s learn what drives you—besides caffeine, trauma, and spite.",
+                "You talk, I listen. Then I quietly judge and build a custom roast in the background.",
+                "Let's do this quick—like ripping off a personality bandage.",
+                "Think of this as foreplay for emotional vulnerability. But with less touching. Hopefully.",
+                "I'm basically a fortune teller with Wi-Fi. Tell me everything.",
+                "I need your data. Not for evil. Probably."
+            ];
+
+            const randomIndex = Math.floor(Math.random() * introLines.length);
+            const selectedIntro = introLines[randomIndex];
+
+            /**
+             * Implements a typewriter effect for text elements.
+             * @param {HTMLElement} element - The DOM element to type into.
+             * @param {string} text - The full text to type.
+             * @param {number} i - Current index for typing.
+             * @param {function} [callback] - Function to call after typing is complete.
+             */
+            function typeWriter(element, text, i, callback) {
+                if (i < text.length) {
+                    if (element.innerHTML === '') element.style.visibility = 'visible';
+                    element.innerHTML += text.charAt(i);
+                    setTimeout(() => typeWriter(element, text, i + 1, callback), 30 + Math.random() * 70);
+                } else if (callback) setTimeout(callback, 1500);
+            }
+
+            // Start typing the intro text after setting the username
+            // We ensure introTextElement is available before calling typeWriter
+            if (introTextElement) {
+                typeWriter(introTextElement, selectedIntro, 0, () => {
+                    // This callback now just enables the button, it doesn't navigate
+                    // Navigation will happen on button click
+                    continueButton.style.visibility = 'visible'; // Make button visible after text is typed
+                });
+            }
+
+
+            // Event listener for the "Continue" button
+            continueButton.addEventListener('click', () => {
+                // Navigate to the next onboarding page (onboarding questions)
+                window.location.href = 'questions.html'; // Placeholder for the next page
+            });
+        });
+    </script>
+</body>
+</html>
+

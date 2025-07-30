@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Artificial -and- Talentless</title>
+    <!-- Tailwind CSS CDN for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Special Elite for that vintage typewriter feel -->
+    <link href="https://fonts.googleapis.com/css2?family=Special+Elite&display=swap" rel="stylesheet">
+    <style>
+        /* Custom body styles using your specified background and font */
+        body {
+            font-family: 'Special Elite', monospace;
+            background-color: #FFFFE3; /* Light cream background */
+            color: #1A1A1A; /* Default text color */
+            min-height: 100vh; /* Ensure body takes full viewport height */
+            margin: 0;
+            /* Adjust padding-top and padding-bottom to create space for fixed logo and button */
+            padding-top: 120px; /* Space for fixed logo + buffer */
+            padding-bottom: 100px; /* Space for fixed button + buffer */
+            padding-left: 20px;
+            padding-right: 20px;
+            box-sizing: border-box;
+            display: flex; /* Enable flexbox for vertical layout */
+            flex-direction: column; /* Stack children vertically */
+            align-items: center; /* Center horizontally */
+            overflow-x: hidden; /* Prevent horizontal scrolling */
+            position: relative; /* Context for any potential absolute positioning, though not strictly needed for fixed */
+        }
+        /* Dark mode styles, adopting your specified colors */
+        body.dark-mode {
+            background-color: #000000;
+            color: #FFFFE3;
+        }
+
+        /* Container for the logo, fixed at the top of the viewport */
+        #logo-container {
+            position: fixed; /* Fixes the logo relative to the viewport */
+            top: 20px; /* Distance from the top of the viewport */
+            left: 50%; /* Start from the middle */
+            transform: translateX(-50%); /* Pull back by half its width to truly center */
+            z-index: 10; /* Ensure it stays above other content */
+            width: 100%; /* Allows max-width on the logo itself to work properly */
+            text-align: center; /* Center the image within its fixed container */
+        }
+
+        /* Styling for the main logo image within its fixed container */
+        #logo {
+            max-width: 350px; /* Your specified max-width */
+            height: auto; /* Maintain aspect ratio */
+            display: block; /* Remove extra space below image */
+            margin: 0 auto; /* Center the image within its container */
+        }
+
+        /* Adjust logo size and body padding for larger screens */
+        @media (min-width: 600px) {
+            #logo {
+                max-width: 200px; /* Your specified smaller size for larger screens */
+            }
+            body {
+                padding-top: 100px; /* Adjusted padding-top for smaller logo */
+            }
+        }
+
+        /* Main content area, now only containing the text and input, and centered vertically */
+        #main-content-area {
+            flex-grow: 1; /* Allows this container to take up all available vertical space */
+            display: flex; /* Enable flexbox for its children */
+            flex-direction: column; /* Stack children vertically */
+            justify-content: center; /* CENTERS THE CONTENT VERTICALLY */
+            align-items: center; /* Center children horizontally */
+            text-align: center;
+            max-width: 90%; /* Your specified max-width for content */
+            width: 100%; /* Ensure it takes full width within its max-width */
+            padding-left: 1rem; /* Small padding for inner content on very small screens */
+            padding-right: 1rem;
+        }
+
+        /* Styling for the main heading (H1) */
+        h1 {
+            color: #000000; /* Dark text color */
+            font-size: 5.0rem; /* Adjusted to be between the very small and very large */
+            margin-bottom: 40px; /* Space between heading and input */
+            text-align: center;
+            line-height: 3;
+        }
+        /* Responsive font size for larger screens */
+        @media (min-width: 600px) {
+            h1 {
+                font-size: 3.0rem; /* Adjusted for desktop */
+            }
+        }
+        /* Dark mode for H1 */
+        body.dark-mode h1 {
+            color: #FFFFE3;
+        }
+
+        /* Container for the input field */
+        .input-container {
+            display: flex;
+            flex-direction: column;
+            width: 100%; /* Take full width within main-content-area */
+            max-width: 300px; /* Limit input width */
+        }
+
+        /* Styling for the text input field */
+        input[type="text"] {
+            padding: 12px;
+            border: 1px solid #000000; /* Dark border */
+            border-radius: 5px;
+            font-size: 1em;
+            width: 100%;
+            box-sizing: border-box; /* Include padding/border in element's total width/height */
+            font-family: 'Special Elite', monospace; /* Apply specific font */
+            background-color: #FFFFE3; /* Light background for input */
+            color: #1A1A1A; /* Dark text color for input */
+        }
+        input[type="text"]:focus {
+            border-color: #000000; /* Dark border on focus */
+            outline: none; /* Remove default outline */
+        }
+        /* Dark mode for input */
+        body.dark-mode input[type="text"] {
+            background-color: #1A1A1A;
+            color: #FFFFE3;
+            border-color: #FFFFE3;
+        }
+
+
+        /* Footer for the button, fixed at the bottom */
+        #button-footer {
+            position: fixed; /* Fixes the footer relative to the viewport */
+            bottom: 50px; /* Distance from the bottom of the viewport - YOU CAN ADJUST THIS */
+            left: 50%; /* Start from the middle */
+            transform: translateX(-50%); /* Pull back by half its width to truly center */
+            z-index: 10; /* Ensure it stays above other content */
+            width: calc(100% - 40px); /* Full width minus body padding */
+            max-width: 300px; /* Matches button's max-width for centering */
+            text-align: center; /* Center the button within the footer */
+        }
+
+        /* Consistent button styling */
+        button {
+            background-color: #6c5ce7;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1em;
+            font-family: 'Special Elite', monospace;
+            cursor: pointer;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 300px;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        button:disabled {
+            background-color: #cccccc;
+            color: #666666;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        /* Dark mode styles */
+        body.dark-mode button {
+            background-color: #bb86fc;
+            color: #121212;
+        }
+
+        body.dark-mode button:disabled {
+            background-color: #444444;
+            color: #888888;
+        }
+    </style>
+</head>
+<body>
+    <!-- Container for the logo, fixed at the top of the viewport -->
+    <div id="logo-container">
+        <!-- Using logo.png as per previous file uploads, added onerror for robustness -->
+        <img id="logo" src="assets/logo.png" alt="Artificial -and- Talentless Logo" onerror="this.onerror=null; this.src='https://placehold.co/350x80/1A1A1A/FFFFE3?text=Logo'" data-dark-src="assets/logo-dark.png" data-dark-src="assets/logo-dark.png">
+    </div>
+
+    <!-- Main content area that will center the heading and input vertically -->
+    <div id="main-content-area">
+        <h1>What should I call you?</h1>
+        <div class="input-container">
+            <input type="text" id="name-input" placeholder="Your name here...">
+        </div>
+    </div>
+
+    <!-- Footer for the button, fixed at the bottom -->
+    <div id="button-footer">
+        <button id="continue-button">Continue</button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+        // 🔁 data-dark-src swap logic
+        document.querySelectorAll("img[data-dark-src]").forEach(img => {
+          if (document.body.classList.contains("dark-mode")) {
+            img.src = img.dataset.darkSrc;
+          }
+        });
+            // Apply theme based on localStorage
+            const theme = localStorage.getItem('theme');
+            if (theme === 'dark') {
+                document.body.classList.add('dark-mode');
+            }
+
+            const nameInput = document.getElementById('name-input');
+            const continueButton = document.getElementById('continue-button');
+
+            /**
+             * Checks if the name input field has text and enables/disables the continue button.
+             */
+            const checkNameInput = () => {
+                continueButton.disabled = !nameInput.value.trim();
+            };
+
+            // Add event listener for input changes
+            nameInput.addEventListener('input', checkNameInput);
+            // Initial check on page load to set button state
+            checkNameInput();
+
+            // Event listener for the "Continue" button
+            continueButton.addEventListener('click', () => {
+                const name = nameInput.value.trim();
+                if (name) {
+                    localStorage.setItem('userName', name);
+                    // Navigate to the next onboarding page
+                    window.location.href = 'intro.html';
+                }
+            });
+
+            // Set focus to the input field on load for better UX
+            nameInput.focus();
+        });
+    </script>
+</body>
+</html>
+

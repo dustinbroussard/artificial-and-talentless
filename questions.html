@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Artificial -and- Talentless - Onboarding</title>
+    <!-- Tailwind CSS CDN for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Special Elite for that vintage typewriter feel -->
+    <link href="https://fonts.googleapis.com/css2?family=Special+Elite&display=swap" rel="stylesheet">
+    <style>
+        /* Custom body styles using your specified background and font */
+        body {
+            font-family: 'Special Elite', monospace;
+            background-color: #FFFFE3; /* Light cream background */
+            color: #000000; /* Default text color */
+            min-height: 100vh; /* Ensure body takes full viewport height */
+            margin: 0;
+            /* Adjust padding-top and padding-bottom to create space for fixed logo and button footer */
+            padding-top: 120px; /* Space for fixed logo + buffer */
+            padding-bottom: 70px; /* Adjusted: Reduced space for fixed button footer + buffer */
+            padding-left: 20px;
+            padding-right: 20px;
+            box-sizing: border-box;
+            display: flex; /* Enable flexbox for vertical layout */
+            flex-direction: column; /* Stack children vertically */
+            align-items: center; /* Center horizontally */
+            overflow-x: hidden; /* Prevent horizontal scrolling */
+            position: relative; /* Context for fixed positioning */
+        }
+        /* Dark mode styles, adopting your specified colors */
+        body.dark-mode {
+            background-color: #000000;
+            color: #FFFFE3;
+        }
+
+        /* Container for the logo, fixed at the top of the viewport */
+        #logo-container {
+            position: fixed; /* Fixes the logo relative to the viewport */
+            top: 20px; /* Distance from the top of the viewport */
+            left: 50%; /* Start from the middle */
+            transform: translateX(-50%); /* Pull back by half its width to truly center */
+            z-index: 10; /* Ensures it stays above other content */
+            width: 100%; /* Allows max-width on the logo itself to work properly */
+            text-align: center; /* Center the image within its fixed container */
+        }
+
+        /* Styling for the main logo image within its fixed container */
+        #logo {
+            max-width: 150px; /* Your specified max-width */
+            height: auto; /* Maintain aspect ratio */
+            display: block; /* Remove extra space below image */
+            margin: 0 auto; /* Center the image within its container */
+        }
+
+        /* Adjust logo size and body padding for larger screens */
+        @media (min-width: 600px) {
+            #logo {
+                max-width: 200px; /* Your specified smaller size for larger screens */
+            }
+            body {
+                padding-top: 100px; /* Adjusted padding-top for smaller logo */
+            }
+        }
+
+        /* Main content area for questions, dynamically centered */
+        #main-content-area {
+            flex-grow: 1; /* Allows this container to take up all available vertical space */
+            display: flex; /* Enable flexbox for its children */
+            flex-direction: column; /* Stack children vertically */
+            justify-content: center; /* Centers the active question vertically */
+            align-items: center; /* Center questions horizontally */
+            width: 100%;
+            max-width: 500px; /* Max width for the question containers */
+            padding: 0 1rem; /* Padding for inner content on very small screens */
+            box-sizing: border-box; /* Include padding in element's total width */
+            margin-top: 20px; /* ADDED: Pushes content area down slightly */
+        }
+
+        /* Styles for individual question containers */
+        .question-container {
+            display: none; /* Hidden by default, shown by JS */
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            text-align: center;
+        }
+
+        /* Styles for the question text (h2) */
+        .question {
+            font-family: 'Special Elite', monospace;
+            font-size: 1.4em;
+            color: #000000;
+            text-align: center;
+            line-height: 1.5;
+            margin-bottom: 20px;
+            max-width: 90%; /* Limits line length for readability */
+        }
+        body.dark-mode .question {
+            color: #FFFFE3;
+        }
+
+        /* Styles for multiple choice options container */
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        /* Styles for individual option buttons (smaller on mobile) */
+        .option-button {
+            background-color: #FFFFE3;
+            color: #000000;
+            border: 1px solid #000000;
+            padding: 8px 15px; /* Smaller padding for smaller box */
+            font-size: 0.9em; /* Smaller font size */
+            border-radius: 5px;
+            margin-bottom: 8px; /* Slightly less margin */
+            cursor: pointer;
+            text-align: left; /* Align text to the left within the button */
+            transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+        }
+        .option-button:hover:not(.selected) { /* Hover effect when not selected */
+            background-color: #E0E0C0;
+        }
+        .option-button.selected { /* Style for selected option */
+            background-color: #000000;
+            color: #FFFFE3;
+            border-color: #000000;
+        }
+        body.dark-mode .option-button {
+            background-color: #333;
+            color: #FFFFE3;
+            border-color: #FFFFE3;
+        }
+        body.dark-mode .option-button:hover:not(.selected) {
+            background-color: #555;
+        }
+        body.dark-mode .option-button.selected {
+            background-color: #FFFFE3;
+            color: #000000;
+            border-color: #FFFFE3;
+        }
+
+        /* Responsive adjustments for larger screens (option buttons) */
+        @media (min-width: 600px) {
+            .option-button {
+                padding: 12px 20px; /* Slightly larger on desktop */
+                font-size: 1.1em; /* Slightly larger font on desktop */
+                margin-bottom: 10px;
+            }
+            .question { font-size: 1.6em; margin-bottom: 30px; }
+            .open-ended-container label { font-size: 1.3em; }
+            .open-ended-container textarea { font-size: 1.1em; }
+        }
+
+        /* Styles for open-ended text area containers */
+        .open-ended-container {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            margin-bottom: 30px;
+        }
+        .open-ended-container label {
+            font-family: 'Special Elite', monospace;
+            font-size: 1.2em;
+            color: #000000;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        body.dark-mode .open-ended-container label {
+            color: #FFFFE3;
+        }
+        .open-ended-container textarea {
+            padding: 10px;
+            border: 1px solid #000000;
+            border-radius: 5px;
+            font-size: 1em;
+            resize: vertical; /* Allow vertical resizing */
+            min-height: 100px;
+            box-sizing: border-box; /* Include padding/border in element's total width/height */
+            font-family: 'Special Elite', monospace;
+            background-color: #FFFFE3;
+            color: #000000;
+        }
+        .open-ended-container textarea:focus {
+            outline: none;
+            border-color: #000000;
+        }
+        body.dark-mode .open-ended-container textarea {
+            background-color: #333;
+            color: #FFFFE3;
+            border-color: #FFFFE3;
+        }
+
+        /* Footer for the global navigation buttons, fixed at the bottom */
+        #button-footer {
+            position: fixed; /* Fixes the footer relative to the viewport */
+            bottom: 20px; /* Adjusted: Shifted closer to the bottom */
+            left: 50%; /* Start from the middle */
+            transform: translateX(-50%); /* Pull back by half its width to truly center */
+            z-index: 10; /* Ensure it stays above other content */
+            width: calc(100% - 40px); /* Full width minus body padding */
+            max-width: 300px; /* Adjusted max-width to match previous button size */
+            display: flex; /* Use flexbox for buttons */
+            justify-content: space-between; /* Space them out */
+            gap: 10px; /* Gap between buttons */
+            padding: 0; /* Removed vertical padding, relying on 'bottom' and button padding */
+            box-sizing: border-box;
+        }
+
+        /* Styling for navigation buttons, matching the previous screen's primary button style */
+        .nav-button {
+            background-color: #000000;
+            color: #FFFFE3;
+            border: none;
+            padding: 10px 20px; /* Adjusted: Smaller padding for reduced vertical height */
+            font-size: 1.1em; /* Slightly smaller font size for compactness */
+            font-family: 'Special Elite', monospace;
+            cursor: pointer;
+            border-radius: 10px; /* Matched previous button border-radius */
+            flex-grow: 1; /* Allow buttons to grow and fill space within the footer */
+            transition: opacity 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .nav-button:hover:not(:disabled) {
+            opacity: 0.9;
+        }
+        .nav-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        body.dark-mode .nav-button {
+            background-color: #FFFFE3;
+            color: #000000;
+        }
+        body.dark-mode .nav-button:disabled {
+            background-color: #FFFFE3;
+            color: #000000;
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+    <!-- Container for the logo, fixed at the top of the viewport -->
+    <div id="logo-container">
+        <!-- Using logo.jpg as per previous file uploads, added onerror for robustness -->
+        <img id="logo" src="assets/icon.png" alt="Artificial -and- Talentless Logo" onerror="this.onerror=null; this.src='https://placehold.co/350x80/1A1A1A/FFFFE3?text=Logo'" data-dark-src="assets/icon-dark.png" data-dark-src="assets/icon-dark.png">
+    </div>
+
+    <!-- Main content area for displaying questions, centered vertically -->
+    <div id="main-content-area">
+        <!-- Question 1 -->
+        <div id="question-humor" class="question-container">
+            <h2 class="question">What type of humor do you enjoy?</h2>
+            <div class="options-container">
+                <button class="option-button" data-question-id="humor" data-answer="Sarcastic">A) Sarcastic</button>
+                <button class="option-button" data-question-id="humor" data-answer="Dry">B) Dry</button>
+                <button class="option-button" data-question-id="humor" data-answer="Witty">C) Witty</button>
+                <button class="option-button" data-question-id="humor" data-answer="Goofy">D) Goofy</button>
+                <button class="option-button" data-question-id="humor" data-answer="Dark">E) Dark</button>
+                <button class="option-button" data-question-id="humor" data-answer="Slapstick">F) Slapstick</button>
+            </div>
+        </div>
+
+        <!-- Question 2 -->
+        <div id="question-self-description" class="question-container">
+            <h2 class="question">If you had to choose one word to describe yourself, what would it be?</h2>
+            <div class="options-container">
+                <button class="option-button" data-question-id="self-description" data-answer="Driven">A) Driven</button>
+                <button class="option-button" data-question-id="self-description" data-answer="Laid-back">B) Laid-back</button>
+                <button class="option-button" data-question-id="self-description" data-answer="Persistent">C) Persistent</button>
+                <button class="option-button" data-question-id="self-description" data-answer="Chaotic">D) Chaotic</button>
+                <button class="option-button" data-question-id="self-description" data-answer="Curious">E) Curious</button>
+                <button class="option-button" data-question-id="self-description" data-answer="Ambitious">F) Ambitious</button>
+            </div>
+        </div>
+
+        <!-- Question 3 -->
+        <div id="question-friends-description" class="question-container">
+            <h2 class="question">How would your friends describe your personality?</h2>
+            <div class="options-container">
+                <button class="option-button" data-question-id="friends-description" data-answer="Outgoing">A) Outgoing</button>
+                <button class="option-button" data-question-id="friends-description" data-answer="Chill">B) Chill</button>
+                <button class="option-button" data-question-id="friends-description" data-answer="The leader of the group">C) The "leader" of the group</button>
+                <button class="option-button" data-question-id="friends-description" data-answer="The joker">D) The "joker"</button>
+                <button class="option-button" data-question-id="friends-description" data-answer="The thinker">E) The thinker</button>
+                <button class="option-button" data-question-id="friends-description" data-answer="The quiet one">F) The quiet one</button>
+            </div>
+        </div>
+
+        <!-- Question Interests (Open-ended) -->
+        <div id="question-interests" class="question-container">
+            <h2 class="question">What are some of your interests or hobbies?</h2>
+            <div class="open-ended-container">
+                <label for="interests-textarea">Tell me what you enjoy doing:</label>
+                <textarea id="interests-textarea" name="interests"></textarea>
+            </div>
+        </div>
+
+        <!-- Question Job (Open-ended) -->
+        <div id="question-job" class="question-container">
+            <h2 class="question">If you are employed, describe your job. If not, describe a job you think you'd enjoy.</h2>
+            <div class="open-ended-container">
+                <label for="job-textarea">Describe your work (or dream work):</label>
+                <textarea id="job-textarea" name="job"></textarea>
+            </div>
+        </div>
+
+        <!-- Question Strengths (Open-ended) -->
+        <div id="question-strengths" class="question-container">
+            <h2 class="question">What do you consider your personal strengths?</h2>
+            <div class="open-ended-container">
+                <label for="strengths-textarea">What are you good at?</label>
+                <textarea id="strengths-textarea" name="strengths"></textarea>
+            </div>
+        </div>
+
+        <!-- Question Improve (Open-ended) -->
+        <div id="question-improve" class="question-container">
+            <h2 class="question">What are some areas you'd like to improve?</h2>
+            <div class="open-ended-container">
+                <label for="improve-textarea">What would you like to work on?</label>
+                <textarea id="improve-textarea" name="improve"></textarea>
+            </div>
+        </div>
+    </div>
+
+    <!-- Global Footer for Navigation Buttons, fixed at the bottom -->
+    <div id="button-footer">
+        <button id="prev-button" class="nav-button">Prev</button>
+        <button id="next-button" class="nav-button">Next</button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+        // 🔁 data-dark-src swap logic
+        document.querySelectorAll("img[data-dark-src]").forEach(img => {
+          if (document.body.classList.contains("dark-mode")) {
+            img.src = img.dataset.darkSrc;
+          }
+        });
+            // Apply theme based on localStorage
+            const theme = localStorage.getItem('theme');
+            if (theme === 'dark') {
+                document.body.classList.add('dark-mode');
+            }
+
+            // Get all question containers
+            const questionContainers = Array.from(document.querySelectorAll('.question-container'));
+            // Get all option buttons (for multiple choice questions)
+            const optionButtons = document.querySelectorAll('.option-button');
+            // Get all open-ended text areas
+            const openEndedTextareas = document.querySelectorAll('.open-ended-container textarea');
+
+            // Get global navigation buttons
+            const prevButton = document.getElementById('prev-button');
+            const nextButton = document.getElementById('next-button');
+
+            let currentQuestionIndex = 0;
+            const userProfileData = {}; // Stores user's answers
+
+            // Helper function to show only the current question and update button states
+            function showQuestion(index) {
+                questionContainers.forEach((container, i) => {
+                    container.style.display = i === index ? 'flex' : 'none';
+                });
+
+                // Update 'Previous' button visibility
+                prevButton.style.display = index === 0 ? 'none' : 'block';
+
+                // Update 'Next' button text based on whether it's the last question
+                if (index === questionContainers.length - 1) {
+                    nextButton.textContent = 'Submit'; // Changed to 'Submit'
+                } else {
+                    nextButton.textContent = 'Next';
+                }
+
+                // Restore selected state for option buttons and textarea content
+                const currentQuestionContainer = questionContainers[currentQuestionIndex];
+                const questionId = currentQuestionContainer.id.replace('question-', '');
+
+                // Restore multiple choice selection
+                if (currentQuestionContainer.querySelector('.options-container')) {
+                    const selectedAnswer = userProfileData[questionId];
+                    const optionsForThisQuestion = currentQuestionContainer.querySelectorAll('.option-button');
+                    optionsForThisQuestion.forEach(opt => {
+                        opt.classList.remove('selected');
+                        if (opt.getAttribute('data-answer') === selectedAnswer) {
+                            opt.classList.add('selected');
+                        }
+                    });
+                }
+                // Restore open-ended text
+                else if (currentQuestionContainer.querySelector('textarea')) {
+                    const textareaId = currentQuestionContainer.querySelector('textarea').id;
+                    currentQuestionContainer.querySelector('textarea').value = userProfileData[textareaId] || '';
+                }
+
+
+                // Enable/disable 'Next' button based on current question's answer status
+                updateNextButtonState();
+            }
+
+            // Helper to update the state of the 'Next' button (enabled/disabled)
+            function updateNextButtonState() {
+                const currentQuestionContainer = questionContainers[currentQuestionIndex];
+                const questionIdentifier = currentQuestionContainer.id.replace('question-', ''); // e.g., 'humor', 'interests'
+
+                let isAnswered = false;
+                if (currentQuestionContainer.querySelector('.options-container')) {
+                    // It's a multiple-choice question, check if data-question-id has an answer
+                    isAnswered = userProfileData[questionIdentifier] !== undefined;
+                } else if (currentQuestionContainer.querySelector('textarea')) {
+                    // It's an open-ended question, check textarea content
+                    const textareaId = currentQuestionContainer.querySelector('textarea').id;
+                    isAnswered = userProfileData[textareaId] && userProfileData[textareaId].trim() !== '';
+                }
+                nextButton.disabled = !isAnswered;
+            }
+
+            // Event listeners for option buttons (multiple choice)
+            optionButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const questionId = this.getAttribute('data-question-id');
+                    const answer = this.getAttribute('data-answer');
+
+                    // Deselect any previously selected options for this question
+                    const optionsForThisQuestion = this.closest('.options-container').querySelectorAll('.option-button');
+                    optionsForThisQuestion.forEach(opt => opt.classList.remove('selected'));
+
+                    // Select the clicked option
+                    this.classList.add('selected');
+
+                    // Save the answer to profileData
+                    userProfileData[questionId] = answer;
+
+                    // Enable next button after selection
+                    updateNextButtonState();
+                });
+            });
+
+            // Event listeners for open-ended text areas
+            openEndedTextareas.forEach(textarea => {
+                textarea.addEventListener('input', function() { // Use 'input' for real-time validation
+                    userProfileData[this.id] = this.value;
+                    updateNextButtonState(); // Update button state as user types
+                });
+                // Also save on blur, to catch cases where user might just paste and click away
+                textarea.addEventListener('blur', function() {
+                    userProfileData[this.id] = this.value.trim(); // Trim whitespace on blur
+                    updateNextButtonState();
+                });
+            });
+
+            // Global 'Next' button click handler
+            nextButton.addEventListener('click', () => {
+                const currentQuestionContainer = questionContainers[currentQuestionIndex];
+                const questionIdentifier = currentQuestionContainer.id.replace('question-', ''); // e.g., 'humor', 'interests'
+
+                // --- Validation for current question ---
+                let isValid = true;
+                if (currentQuestionContainer.querySelector('.options-container')) {
+                    // Multiple choice validation
+                    if (userProfileData[questionIdentifier] === undefined) { // Check for undefined, not just falsy
+                        // Using a custom modal/message box instead of alert()
+                        displayMessage("Please select an option before proceeding.", "warning");
+                        isValid = false;
+                    }
+                } else if (currentQuestionContainer.querySelector('textarea')) {
+                    // Open-ended validation
+                    const textareaId = currentQuestionContainer.querySelector('textarea').id;
+                    if (!userProfileData[textareaId] || userProfileData[textareaId].trim() === '') {
+                        displayMessage("Please fill out this field before proceeding.", "warning");
+                        isValid = false;
+                    }
+                }
+
+                if (!isValid) {
+                    return; // Stop if current question isn't answered
+                }
+
+                // --- Navigation Logic ---
+                if (currentQuestionIndex < questionContainers.length - 1) {
+                    currentQuestionIndex++;
+                    showQuestion(currentQuestionIndex);
+                } else {
+                    // This is the last question, so submit the profile
+                    const userName = localStorage.getItem('userName') || 'Unknown User';
+                    const fullUserProfile = { userName, ...userProfileData };
+                    localStorage.setItem('userProfile', JSON.stringify(fullUserProfile));
+                    localStorage.setItem('isOnboarded', 'true'); // Mark onboarding as complete
+                    window.location.href = 'onboard-settings.html'; // Navigate to the main app
+                }
+            });
+
+            // Global 'Previous' button click handler
+            prevButton.addEventListener('click', () => {
+                if (currentQuestionIndex > 0) {
+                    currentQuestionIndex--;
+                    showQuestion(currentQuestionIndex);
+                }
+            });
+
+            // Custom message box function (replaces alert())
+            function displayMessage(message, type = "info") {
+                const messageBox = document.createElement('div');
+                messageBox.classList.add('message-box', type);
+                messageBox.textContent = message;
+                document.body.appendChild(messageBox);
+
+                // Basic styling for the message box
+                messageBox.style.cssText = `
+                    position: fixed;
+                    bottom: 80px; /* Adjusted: Above the new, lower fixed footer */
+                    left: 50%;
+                    transform: translateX(-50%);
+                    background-color: #000000;
+                    color: #FFFFE3;
+                    padding: 15px 25px;
+                    border-radius: 8px;
+                    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+                    z-index: 1000;
+                    font-family: 'Special Elite', monospace;
+                    opacity: 0;
+                    transition: opacity 0.3s ease-in-out;
+                    max-width: 80%;
+                    text-align: center;
+                `;
+                // Dark mode adjustment for message box
+                if (document.body.classList.contains('dark-mode')) {
+                    messageBox.style.backgroundColor = '#FFFFE3';
+                    messageBox.style.color = '#000000';
+                }
+
+                setTimeout(() => {
+                    messageBox.style.opacity = 1;
+                }, 10); // Small delay to trigger transition
+
+                setTimeout(() => {
+                    messageBox.style.opacity = 0;
+                    messageBox.addEventListener('transitionend', () => messageBox.remove());
+                }, 3000); // Message disappears after 3 seconds
+            }
+
+
+            // Initial display of the first question
+            showQuestion(currentQuestionIndex);
+        });
+    </script>
+</body>
+</html>
+

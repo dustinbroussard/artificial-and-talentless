@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Artificial -and- Talentless - Settings</title>
+    <!-- Tailwind CSS CDN for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Special Elite for that vintage typewriter feel -->
+    <link href="https://fonts.googleapis.com/css2?family=Special+Elite&display=swap" rel="stylesheet">
+    <style>
+        /* Base styles for all screen sizes */
+        body {
+            font-family: 'Special Elite', monospace;
+            background-color: #FFFFE3; /* Light cream background */
+            color: #000000; /* Default text color */
+            min-height: 100vh; /* Ensure body takes full viewport height */
+            margin: 0;
+            padding-top: 80px; /* Space for fixed header content */
+            padding-bottom: 120px; /* Space for fixed button footer + buffer */
+            padding-left: 20px;
+            padding-right: 20px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            overflow-x: hidden;
+            position: relative;
+        }
+        body.dark-mode {
+            background-color: #000000;
+            color: #FFFFE3;
+        }
+
+        /* New fixed header for title and theme toggle */
+        #header-content {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: center; /* Center the title */
+            align-items: center;
+            padding: 15px 20px; /* Adjusted padding to match body padding */
+            box-sizing: border-box;
+            background-color: #FFFFE3; /* Match body background */
+            z-index: 20; /* Higher than logo if it were present */
+            border-bottom: 1px solid #E0E0C0; /* Subtle separator */
+        }
+        body.dark-mode #header-content {
+            background-color: #000000;
+            border-bottom-color: #333;
+        }
+
+        h1#settings-main-title {
+            font-family: 'Special Elite', monospace;
+            font-size: 2.0em; /* Initial size for desktop */
+            margin: 0; /* Remove default margins */
+            flex-grow: 1; /* Allow title to take up space */
+            text-align: center; /* Centered alignment for the title */
+            color: #000000;
+        }
+        body.dark-mode h1#settings-main-title {
+            color: #FFFFE3;
+        }
+
+        /* Theme toggle switch container */
+        #theme-toggle-switch-container {
+            position: absolute; /* Position relative to #header-content */
+            right: 20px; /* Aligned to the right */
+            top: 50%;
+            transform: translateY(-50%); /* Vertically center */
+            flex-shrink: 0; /* Don't shrink */
+        }
+
+        /* The switch - the box around the slider */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px; /* Smaller width */
+            height: 28px; /* Smaller height */
+        }
+
+        /* Hide default HTML checkbox */
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        /* The slider (track) */
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #FFFFE3; /* Light mode track color (cream) */
+            -webkit-transition: .4s;
+            transition: .4s;
+            border-radius: 28px; /* Rounded corners for the track (half of height) */
+            border: 1px solid #000000; /* Border matching theme */
+            box-sizing: border-box; /* Include padding/border in size */
+        }
+        body.dark-mode .slider {
+            background-color: #000000; /* Dark mode track color */
+            border-color: #FFFFE3; /* Border matching theme */
+        }
+
+        /* The slider (thumb) */
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px; /* Smaller thumb */
+            width: 20px; /* Smaller thumb */
+            left: 3px; /* Adjusted position */
+            bottom: 3px; /* Adjusted position */
+            background-color: #000000; /* Thumb color for light mode */
+            -webkit-transition: .4s;
+            transition: .4s;
+            border-radius: 50%; /* Rounded thumb */
+        }
+        body.dark-mode .slider:before {
+            background-color: #FFFFE3; /* Thumb color for dark mode */
+        }
+
+        /* When checkbox is checked (dark mode) */
+        input:checked + .slider {
+            background-color: #000000; /* Track color when dark mode is active */
+            border-color: #FFFFE3; /* Border color when dark mode is active */
+        }
+
+        input:checked + .slider:before {
+            -webkit-transform: translateX(22px); /* Adjusted slide distance (50 - 20 - 2*3 = 24. No, (50-20)/2 + (50-20)/2 + 2 = 22) */
+            -ms-transform: translateX(22px);
+            transform: translateX(22px);
+            background-color: #FFFFE3; /* Thumb color when dark mode is active */
+        }
+
+        input:focus + .slider {
+            box-shadow: 0 0 1px #000000; /* Focus shadow matching theme */
+        }
+        body.dark-mode input:focus + .slider {
+            box-shadow: 0 0 1px #FFFFE3; /* Focus shadow matching theme */
+        }
+
+        #main-content-area {
+            width: 100%;
+            max-width: 500px;
+            padding: 0 1rem;
+            box-sizing: border-box;
+            margin-top: 20px; /* Space from fixed header */
+            margin-bottom: 20px;
+        }
+
+        .setting-section {
+            width: 100%;
+            margin-bottom: 25px;
+            padding: 15px;
+            border: 1px solid #000000;
+            border-radius: 8px;
+            background-color: #FFFFE3;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        body.dark-mode .setting-section {
+            background-color: #1A1A1A;
+            border-color: #FFFFE3;
+        }
+
+        .setting-title {
+            font-family: 'Special Elite', monospace;
+            font-size: 1.3em;
+            color: #000000;
+            margin-bottom: 15px;
+            text-align: center;
+            line-height: 1.4;
+        }
+        body.dark-mode .setting-title {
+            color: #FFFFE3;
+        }
+
+        .input-field, select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #000000;
+            border-radius: 5px;
+            font-family: 'Special Elite', monospace;
+            font-size: 1em;
+            background-color: #FFFFE3;
+            color: #000000;
+            box-sizing: border-box;
+        }
+        .input-field:focus, select:focus {
+            outline: none;
+            border-color: #000000;
+        }
+        body.dark-mode .input-field, body.dark-mode select {
+            background-color: #333;
+            color: #FFFFE3;
+            border-color: #FFFFE3;
+        }
+
+        select {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20256%20512%22%3E%3Cpath%20fill%3D%22%230A0518%22%20d%3D%22M192%20424.4l-96-96%2096-96%2022.6%2022.6-67.4%2067.4%2067.4%2067.4z%22%2F%3E%3C%2Fsvg%3E');
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 12px;
+        }
+        body.dark-mode select {
+            background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20256%20512%22%3E%3Cpath%20fill%3D%22%23FFFFE3%22%20d%3D%22M192%20424.4l-96-96%2096-96%2022.6%2022.6-67.4%2067.4%2067.4%2067.4z%22%2F%3E%3C%2Fsvg%3E');
+        }
+
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            justify-content: center;
+        }
+        .checkbox-container input[type="checkbox"] {
+            margin-right: 10px;
+            width: 18px;
+            height: 18px;
+            accent-color: #000000;
+        }
+        body.dark-mode .checkbox-container input[type="checkbox"] {
+            accent-color: #FFFFE3;
+        }
+        .checkbox-container label {
+            font-family: 'Special Elite', monospace;
+            font-size: 0.95em;
+            color: #000000;
+        }
+        body.dark-mode .checkbox-container label {
+            color: #FFFFE3;
+        }
+
+        .api-link {
+            font-family: 'Special Elite', monospace;
+            font-size: 0.9em;
+            color: #000000;
+            text-decoration: underline;
+            margin-top: 5px;
+            display: block;
+            text-align: center;
+        }
+        body.dark-mode .api-link {
+            color: #FFFFE3;
+        }
+
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left-color: #000000;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            margin: 10px auto;
+            display: none;
+        }
+        body.dark-mode .spinner {
+            border-color: rgba(247, 247, 211, 0.2);
+            border-left-color: #FFFFE3;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        #delete-data-button {
+            background-color: #D9534F;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 1.1em;
+            font-family: 'Special Elite', monospace;
+            border-radius: 10px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.2s ease, opacity 0.2s ease;
+        }
+        #delete-data-button:hover {
+            background-color: #C9302C;
+        }
+
+        #button-footer {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            width: calc(100% - 40px);
+            max-width: 300px;
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .nav-button {
+            background-color: #000000;
+            color: #FFFFE3;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1.1em;
+            font-family: 'Special Elite', monospace;
+            cursor: pointer;
+            border-radius: 10px;
+            flex-grow: 1;
+            transition: opacity 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .nav-button:hover:not(:disabled) {
+            opacity: 0.9;
+        }
+        .nav-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        body.dark-mode .nav-button {
+            background-color: #FFFFE3;
+            color: #000000;
+        }
+        body.dark-mode .nav-button:disabled {
+            background-color: #FFFFE3;
+            color: #000000;
+            opacity: 0.5;
+        }
+
+        .message-box {
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #000000;
+            color: #FFFFE3;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            z-index: 1000;
+            font-family: 'Special Elite', monospace;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+            max-width: 80%;
+            text-align: center;
+        }
+        body.dark-mode .message-box {
+            background-color: #FFFFE3;
+            color: #000000;
+        }
+
+        /* --- Mobile Optimizations (applies to screens <= 640px) --- */
+        @media (max-width: 640px) {
+            body {
+                padding-top: 60px; /* Adjust top padding for smaller header */
+                padding-bottom: 100px;
+                padding-left: 10px;
+                padding-right: 10px;
+            }
+            #header-content {
+                padding: 10px 10px; /* Tighter padding for header on mobile */
+            }
+            h1#settings-main-title {
+                font-size: 1.6em; /* Smaller main title on mobile */
+            }
+            #theme-toggle-switch-container {
+                 right: 10px; /* Adjust padding from right edge */
+            }
+            .switch {
+                width: 50px; /* Slightly smaller switch on mobile */
+                height: 28px;
+            }
+            .slider:before {
+                height: 20px; /* Smaller thumb */
+                width: 20px;
+                left: 3px; /* Adjusted position for mobile */
+                bottom: 3px; /* Adjusted position for mobile */
+            }
+            input:checked + .slider:before {
+                -webkit-transform: translateX(22px); /* Adjust slide distance for smaller switch */
+                -ms-transform: translateX(22px);
+                transform: translateX(22px);
+            }
+            .setting-title {
+                font-size: 1.1em;
+                margin-bottom: 10px;
+            }
+            .setting-section {
+                margin-bottom: 15px;
+                padding: 10px;
+            }
+            .input-field, select {
+                font-size: 0.95em;
+                padding: 8px;
+                margin-bottom: 8px;
+            }
+            .checkbox-container label {
+                font-size: 0.9em;
+            }
+            .api-link {
+                font-size: 0.85em;
+            }
+            #delete-data-button {
+                font-size: 1em;
+                padding: 10px 20px;
+                margin-top: 10px;
+            }
+            #button-footer {
+                width: calc(100% - 20px);
+                bottom: 10px;
+            }
+            .nav-button {
+                font-size: 1em;
+                padding: 8px 15px;
+            }
+            .message-box {
+                bottom: 65px;
+                max-width: 90%;
+                padding: 10px 20px;
+            }
+             .message-box.confirm div button {
+                padding: 8px 12px !important;
+                font-size: 0.9em !important;
+             }
+        }
+    </style>
+</head>
+<body>
+    <!-- New fixed header for title and theme toggle -->
+    <div id="header-content">
+        <h1 id="settings-main-title">Settings</h1>
+        <div id="theme-toggle-switch-container">
+            <!-- The switch HTML structure -->
+            <label class="switch">
+                <input type="checkbox" id="theme-toggle-checkbox">
+                <span class="slider"></span>
+            </label>
+        </div>
+    </div>
+
+    <!-- Main content area for displaying settings -->
+    <div id="main-content-area">
+        <!-- API Key and Model Section -->
+        <div class="setting-section">
+            <h2 class="setting-title">AI Engine Settings</h2>
+            <label for="openrouter-api-key" class="block text-sm mb-2 text-center">OpenRouter API Key:</label>
+            <input type="password" id="openrouter-api-key" class="input-field" placeholder="sk-...">
+            <a href="https://openrouter.ai/keys" target="_blank" class="api-link">Get your API key here</a>
+
+            <label for="openrouter-model-select" class="block text-sm my-2 text-center">Select Model:</label>
+            <select id="openrouter-model-select" class="input-field">
+                <option value="">Loading models...</option>
+            </select>
+            <div id="model-loading-spinner" class="spinner"></div>
+
+            <div class="checkbox-container">
+                <input type="checkbox" id="filter-free-models">
+                <label for="filter-free-models">Show only free models</label>
+            </div>
+        </div>
+
+        <!-- Content Type Section -->
+        <div class="setting-section">
+            <h2 class="setting-title">Content Type</h2>
+            <select id="content-type-select" class="input-field">
+                <option value="Mild Insults">Mild Insults</option>
+                <option value="Harsh Insults">Harsh Insults</option>
+                <option value="Cruel Insults">Cruel Insults</option>
+                <option value="Sarcastic Affirmations">Sarcastic Affirmations</option>
+                <option value="Dad Jokes">Dad Jokes</option>
+                <option value="Affirmations">Affirmations</option>
+                <option value="Inspirational Quotes">Inspirational Quotes</option>
+                <option value="Random">Random</option>
+                <option value="Backhanded Compliments">Backhanded Compliments</option>
+            </select>
+        </div>
+
+        <!-- Data Section -->
+        <div class="setting-section">
+            <h2 class="setting-title">Data</h2>
+            <p class="data-info">All of your information is stored locally on the device. Deleting it will clear all of your preferences and profile information, essentially resetting the application.</p>
+            <button id="delete-data-button">DELETE ALL DATA</button>
+        </div>
+    </div>
+
+    <!-- Global Footer for Navigation Buttons, fixed at the bottom -->
+    <div id="button-footer">
+        <button id="back-to-generator-button" class="nav-button">Back</button>
+        <button id="save-settings-button" class="nav-button">Save Settings</button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const body = document.body;
+            const openrouterApiKeyInput = document.getElementById('openrouter-api-key');
+            const openrouterModelSelect = document.getElementById('openrouter-model-select');
+            const filterFreeModelsCheckbox = document.getElementById('filter-free-models');
+            const modelLoadingSpinner = document.getElementById('model-loading-spinner');
+            const contentTypeSelect = document.getElementById('content-type-select');
+            const deleteDataButton = document.getElementById('delete-data-button');
+            const backToGeneratorButton = document.getElementById('back-to-generator-button');
+            const saveSettingsButton = document.getElementById('save-settings-button');
+            const themeToggleCheckbox = document.getElementById('theme-toggle-checkbox');
+
+            let allOpenRouterModels = []; // To store all fetched models
+
+            // --- Custom Message Box (reused) ---
+            function displayMessage(message, type = "info") {
+                if (type === "confirm") {
+                    return new Promise((resolve) => {
+                        const confirmBox = document.createElement('div');
+                        confirmBox.classList.add('message-box', 'confirm');
+                        confirmBox.innerHTML = `
+                            <p>${message}</p>
+                            <div style="margin-top: 15px; display: flex; justify-content: center; gap: 10px;">
+                                <button id="confirm-yes" class="nav-button" style="flex-grow: 0; padding: 8px 15px;">Yes</button>
+                                <button id="confirm-no" class="nav-button" style="flex-grow: 0; padding: 8px 15px;">No</button>
+                            </div>
+                        `;
+                        document.body.appendChild(confirmBox);
+
+                        // Apply correct button styles based on theme
+                        const confirmYesBtn = confirmBox.querySelector('#confirm-yes');
+                        const confirmNoBtn = confirmBox.querySelector('#confirm-no');
+                        confirmYesBtn.style.backgroundColor = '#D9534F'; // Yes button is always red
+
+                        if (body.classList.contains('dark-mode')) {
+                           confirmNoBtn.style.backgroundColor = '#FFFFE3';
+                           confirmNoBtn.style.color = '#000000';
+                        } else {
+                           confirmNoBtn.style.backgroundColor = '#000000';
+                           confirmNoBtn.style.color = '#FFFFE3';
+                        }
+
+                        confirmBox.style.opacity = 0;
+                        setTimeout(() => { confirmBox.style.opacity = 1; }, 10);
+
+                        confirmYesBtn.addEventListener('click', () => { confirmBox.remove(); resolve(true); });
+                        confirmNoBtn.addEventListener('click', () => { confirmBox.remove(); resolve(false); });
+                    });
+                } else {
+                    // Standard message box (info, success, error)
+                    const messageBox = document.createElement('div');
+                    messageBox.classList.add('message-box', type);
+                    messageBox.textContent = message;
+                    document.body.appendChild(messageBox);
+
+                    messageBox.style.opacity = 0;
+                    if (body.classList.contains('dark-mode')) {
+                        messageBox.style.backgroundColor = '#FFFFE3';
+                        messageBox.style.color = '#000000';
+                    }
+
+                    setTimeout(() => { messageBox.style.opacity = 1; }, 10);
+                    setTimeout(() => {
+                        messageBox.style.opacity = 0;
+                        messageBox.addEventListener('transitionend', () => messageBox.remove());
+                    }, 3000);
+                }
+            }
+
+            // --- Theme Handling ---
+            function applyTheme(theme) {
+                if (theme === 'dark') {
+                    body.classList.add('dark-mode');
+                    themeToggleCheckbox.checked = true; // Set checkbox state
+                } else {
+                    body.classList.remove('dark-mode');
+                    themeToggleCheckbox.checked = false; // Set checkbox state
+                }
+                localStorage.setItem('theme', theme);
+            }
+
+            // --- API Call to OpenRouter Models ---
+            async function fetchOpenRouterModels() {
+                modelLoadingSpinner.style.display = 'block';
+                openrouterModelSelect.innerHTML = '<option value="">Loading models...</option>';
+                openrouterModelSelect.disabled = true;
+
+                const currentApiKey = openrouterApiKeyInput.value.trim();
+                console.log("Attempting to fetch OpenRouter models with API Key:", currentApiKey ? "Key present" : "Key missing"); // Diagnostic log
+
+                if (!currentApiKey) {
+                    displayMessage("Please enter an OpenRouter API Key to load models.", "warning");
+                    openrouterModelSelect.innerHTML = '<option value="">Enter API Key</option>';
+                    modelLoadingSpinner.style.display = 'none';
+                    openrouterModelSelect.disabled = true;
+                    return;
+                }
+
+                try {
+                    const response = await fetch('https://openrouter.ai/api/v1/models', {
+                        headers: {
+                            'Authorization': `Bearer ${currentApiKey}`,
+                            'Content-Type': 'application/json'
+                        }
+                    });
+
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(`Failed to fetch models: ${response.status} - ${errorData.message || response.statusText}`);
+                    }
+
+                    const data = await response.json();
+                    allOpenRouterModels = data.data.map(model => ({
+                        id: model.id,
+                        name: model.name,
+                        free: model.pricing && model.pricing.prompt && model.pricing.prompt === 0 && model.pricing.completion && model.pricing.completion === 0
+                    }));
+                    console.log("Models fetched successfully:", allOpenRouterModels.length); // Diagnostic log
+
+                } catch (error) {
+                    console.error("Error fetching OpenRouter models:", error); // Detailed error log
+                    displayMessage(`Failed to load models: ${error.message}. Check your API Key or network.`, "error");
+                    openrouterModelSelect.innerHTML = '<option value="">Error loading models</option>';
+                    allOpenRouterModels = [];
+                } finally {
+                    modelLoadingSpinner.style.display = 'none';
+                    openrouterModelSelect.disabled = false;
+                    populateModelDropdown();
+                }
+            }
+
+            // --- Populate Model Dropdown ---
+            function populateModelDropdown() {
+                openrouterModelSelect.innerHTML = '';
+                let modelsToDisplay = allOpenRouterModels;
+
+                if (filterFreeModelsCheckbox.checked) {
+                    modelsToDisplay = allOpenRouterModels.filter(model => model.free);
+                }
+
+                if (modelsToDisplay.length === 0) {
+                    openrouterModelSelect.innerHTML = '<option value="">No models found with current filter.</option>';
+                } else {
+                    modelsToDisplay.sort((a, b) => a.name.localeCompare(b.name));
+
+                    modelsToDisplay.forEach(model => {
+                        const option = document.createElement('option');
+                        option.value = model.id;
+                        option.textContent = model.name;
+                        openrouterModelSelect.appendChild(option);
+                    });
+                }
+                const storedSettings = JSON.parse(localStorage.getItem('appSettings')) || {};
+                openrouterModelSelect.value = storedSettings.selectedModel || '';
+
+                updateSaveButtonState();
+            }
+
+            // --- Update Save Button State (Validation) ---
+            function updateSaveButtonState() {
+                const isApiKeyEntered = openrouterApiKeyInput.value.trim() !== '';
+                const isModelSelected = openrouterModelSelect.value !== '';
+                const isContentTypeSelected = contentTypeSelect.value !== '';
+
+                saveSettingsButton.disabled = !(isApiKeyEntered && isModelSelected && isContentTypeSelected);
+            }
+
+            // --- Load Settings on Init ---
+            const initialSettings = JSON.parse(localStorage.getItem('appSettings')) || {};
+            if (initialSettings.apiKey) {
+                openrouterApiKeyInput.value = initialSettings.apiKey;
+            }
+            if (initialSettings.contentType) {
+                contentTypeSelect.value = initialSettings.contentType;
+            }
+            // IMPORTANT: Call applyTheme before fetchOpenRouterModels to ensure checkbox state is correct
+            applyTheme(localStorage.getItem('theme') || 'light');
+
+            if (openrouterApiKeyInput.value.trim() !== '') {
+                await fetchOpenRouterModels();
+            } else {
+                openrouterModelSelect.innerHTML = '<option value="">Enter API Key to load models</option>';
+                openrouterModelSelect.disabled = true;
+            }
+            updateSaveButtonState();
+
+            // --- Event Listeners ---
+            openrouterApiKeyInput.addEventListener('input', updateSaveButtonState);
+            openrouterApiKeyInput.addEventListener('blur', () => {
+                const currentVal = openrouterApiKeyInput.value.trim();
+                // Only fetch if key actually changed OR if it was previously empty and now has content
+                // Also check if currentVal is different from the currently displayed input value
+                if (currentVal !== initialSettings.apiKey || (initialSettings.apiKey === undefined && currentVal !== '')) {
+                     // Adding a small debounce for re-fetching on blur to avoid too many calls
+                    setTimeout(() => fetchOpenRouterModels(), 300);
+                }
+            });
+
+            openrouterModelSelect.addEventListener('change', updateSaveButtonState);
+            filterFreeModelsCheckbox.addEventListener('change', populateModelDropdown);
+            contentTypeSelect.addEventListener('change', updateSaveButtonState);
+
+            // Theme toggle via the new checkbox
+            themeToggleCheckbox.addEventListener('change', () => {
+                const newTheme = themeToggleCheckbox.checked ? 'dark' : 'light';
+                applyTheme(newTheme);
+            });
+
+            // --- Data Deletion ---
+            deleteDataButton.addEventListener('click', async () => {
+                const confirmed = await displayMessage("Are you sure you want to delete all your data? This action cannot be undone.", "confirm");
+                if (confirmed) {
+                    localStorage.clear();
+                    displayMessage("All data has been deleted. Redirecting to start.", "info");
+                    setTimeout(() => {
+                        window.location.href = 'index.html'; // Redirect to start page
+                    }, 1000);
+                }
+            });
+
+            // --- Navigation Buttons ---
+            backToGeneratorButton.addEventListener('click', () => {
+                window.location.href = 'index.html'; // Go back to the generator
+            });
+
+            saveSettingsButton.addEventListener('click', () => {
+                const appSettings = {
+                    apiKey: openrouterApiKeyInput.value.trim(),
+                    selectedModel: openrouterModelSelect.value,
+                    contentType: contentTypeSelect.value
+                };
+                localStorage.setItem('appSettings', JSON.stringify(appSettings));
+                displayMessage("Settings saved successfully!", "info");
+            });
+        });
+    </script>
+</body>
+</html>
+

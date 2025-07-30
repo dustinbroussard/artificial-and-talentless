@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#FFFFE3">
+    <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="A-and-T">
+    <link rel="apple-touch-icon" href="assets/icon.png">
+    <link rel="manifest" href="manifest.webmanifest">
+    <title>Artificial -and- Talentless</title>
+    <!-- Tailwind CSS CDN for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Special Elite for that vintage typewriter feel -->
+    <link href="https://fonts.googleapis.com/css2?family=Special+Elite&display=swap" rel="stylesheet">
+    <style>
+        /* Modern body styles with smooth transitions */
+        body {
+            font-family: 'Special Elite', monospace;
+            background-color: #FFFFE3;
+            color: #000000;
+            min-height: 100vh;
+            margin: 0;
+            padding: 2rem;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+            position: relative;
+            transition: all 0.3s ease-in-out;
+        }
+        /* Modern dark mode */
+        body.dark-mode {
+            background-color: #121212;
+            color: #e0e0e0;
+            --primary-color: #bb86fc;
+            --secondary-color: #03dac6;
+        }
+
+        /* Modern logo container with subtle shadow */
+        #logo-container {
+            position: fixed;
+            top: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            width: 100%;
+            text-align: center;
+        }
+
+        #logo {
+            max-width: 350px;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+            transition: all 0.3s ease;
+        }
+
+        @media (min-width: 768px) {
+            #logo {
+                max-width: 350px;
+            }
+            body {
+                padding-top: 7rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            #logo {
+                max-width: 350px;
+            }
+        }
+
+        /* Main content area, now only containing the text, and centered vertically */
+        #main-content-area {
+            flex-grow: 1; /* Allows this container to take up all available vertical space */
+            display: flex; /* Enable flexbox for its children */
+            flex-direction: column; /* Stack children vertically */
+            justify-content: center; /* **THIS CENTERS THE TEXT VERTICALLY** */
+            align-items: center; /* Center children horizontally */
+            text-align: center;
+            max-width: 90%; /* Your specified max-width for content */
+            width: 100%; /* Ensure it takes full width within its max-width */
+            padding-left: 1rem; /* Small padding for inner content on very small screens */
+            padding-right: 1rem;
+        }
+
+        /* Container for taglines to group them */
+        .text-block {
+            width: 100%; /* Ensure it takes full width */
+            text-align: center; /* Center text within the block */
+        }
+
+        /* Tagline and sub-tagline styles */
+        .tagline, .sub-tagline {
+            font-family: 'Special Elite', monospace; /* Ensure font is applied */
+            line-height: 1.4;
+            visibility: hidden; /* Controlled by JavaScript typeWriter effect */
+            margin-bottom: 10px; /* Default margin between lines */
+        }
+        .tagline {
+            font-size: 1.2em;
+        }
+        .sub-tagline {
+            font-size: 1em;
+            font-style: italic;
+            margin-bottom: 30px; /* Margin before the button (this will now be removed from text-block as button is separate) */
+        }
+
+        /* Responsive font sizes for taglines */
+        @media (min-width: 600px) {
+            .tagline { font-size: 1.4em; }
+            .sub-tagline { font-size: 1.2em; }
+        }
+
+        /* Footer for the button, fixed at the bottom */
+        #button-footer {
+            position: fixed; /* Fixes the footer relative to the viewport */
+            bottom: 50px; /* Distance from the bottom of the viewport */
+            left: 50%; /* Start from the middle */
+            transform: translateX(-50%); /* Pull back by half its width to truly center */
+            z-index: 10; /* Ensure it stays above other content */
+            width: calc(100% - 40px); /* Full width minus body padding */
+            max-width: 300px; /* Matches button's max-width for centering */
+            text-align: center; /* Center the button within the footer */
+        }
+
+        /* Button styling, incorporating your specified colors and sizes */
+        button {
+            background-color: #000000; /* Dark button background */
+            color: #FFFFE3; /* Light text color */
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2em;
+            font-family: 'Special Elite', monospace;
+            cursor: pointer;
+            border-radius: 10px; /* Rounded corners for the button */
+            width: 100%; /* Full width within its container */
+            max-width: 300px; /* Your specified max-width */
+            visibility: hidden; /* Controlled by JavaScript typeWriter effect */
+            transition: opacity 0.2s ease-in-out, background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+        }
+        button:hover {
+            opacity: 0.9;
+        }
+
+        /* Dark mode button styles */
+        body.dark-mode button {
+            background-color: #FFFFE3;
+            color: #000000;
+        }
+    </style>
+</head>
+<body>
+    <!-- Container for the logo, fixed at the top of the viewport -->
+    <div id="logo-container">
+        <img id="logo" src="assets/logo.png" alt="Artificial -and- Talentless Logo" onerror="this.onerror=null; this.src='https://placehold.co/350x80/1A1A1A/FFFFE3?text=Logo'" data-dark-src="assets/logo-dark.png" data-dark-src="assets/logo-dark.png">
+    </div>
+
+    <!-- Main content area that will center the text vertically -->
+    <div id="main-content-area">
+        <!-- Container for taglines -->
+        <div class="text-block">
+            <p class="tagline"></p>
+            <p class="sub-tagline"></p>
+        </div>
+    </div>
+
+    <!-- Footer for the button, fixed at the bottom -->
+    <div id="button-footer">
+        <button id="get-started-button">Get Started</button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+        // 🔁 data-dark-src swap logic
+        document.querySelectorAll("img[data-dark-src]").forEach(img => {
+          if (document.body.classList.contains("dark-mode")) {
+            img.src = img.dataset.darkSrc;
+          }
+        });
+            // Apply theme based on localStorage
+            const theme = localStorage.getItem('theme');
+            if (theme === 'dark') {
+                document.body.classList.add('dark-mode');
+            }
+
+            const getStartedButton = document.getElementById('get-started-button');
+            const tagline = document.querySelector('.tagline');
+            const subTagline = document.querySelector('.sub-tagline');
+
+            // Your original tagline texts
+            const taglineText = "An AI-powered minimalist typewriter generates personalized insults just for you.";
+            const subTaglineText = "Enjoy. Or don't. Whatever.";
+
+            // Check if user has already onboarded
+            const isOnboarded = localStorage.getItem('isOnboarded') === 'true';
+            if (isOnboarded) {
+                // Redirect if already onboarded (assuming 'generator.html' is the next page)
+                window.location.href = 'generator.html';
+                return; // Stop further execution on this page
+            }
+
+            /**
+             * Implements a typewriter effect for text elements.
+             * @param {HTMLElement} element - The DOM element to type into.
+             * @param {string} text - The full text to type.
+             * @param {number} i - Current index for typing.
+             * @param {function} [callback] - Function to call after typing is complete.
+             */
+            function typeWriter(element, text, i, callback) {
+                if (i < text.length) {
+                    if (i === 0) {
+                        element.style.visibility = 'visible'; // Make element visible when typing starts
+                        element.innerHTML = ''; // Clear content before typing
+                    }
+                    element.innerHTML += text.charAt(i);
+                    // Random delay for a more natural typewriter feel
+                    setTimeout(() => typeWriter(element, text, i + 1, callback), 50 + Math.random() * 50);
+                } else if (callback) {
+                    setTimeout(callback, 500); // Small delay before calling next function
+                }
+            }
+
+            // Start the typewriter effect after a short delay
+            setTimeout(() => {
+                typeWriter(tagline, taglineText, 0, () => {
+                    typeWriter(subTagline, subTaglineText, 0, () => {
+                        // Make the button visible after both taglines are typed
+                        getStartedButton.style.visibility = 'visible';
+                    });
+                });
+            }, 1000); // Initial delay before typing starts
+
+            // Event listener for the "Get Started" button
+            getStartedButton.addEventListener('click', () => {
+                // Set onboarding status to true and navigate to the next page
+                window.location.href = 'name.html'; // Assuming 'onboarding-name.html' is the next page
+            });
+        });
+    </script>
+</body>
+</html>
+
